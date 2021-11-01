@@ -29,13 +29,14 @@ def parse_rules(text: str) -> list:
         else:
             rule_list.append(present_rule)
             present_rule = present_rule[:node.depth-1]
+            present_rule.append(node)
         
         past_depth = node.depth
     
     return rule_list
 
 
-def extract_dictionary_rule(branch: list) -> tuple(dict, str):
+def extract_dictionary_rule(branch: list) -> tuple:
     """Separa uma regra (ramo) de uma árvore de decisão em um dicionário que representa as condições
     e um string que representa a predição (resultado) do ramo.
     O dicionário segue uma estrutura aninhada, onde no primeiro nível temos a variável, no segundo nível
@@ -55,10 +56,10 @@ def extract_dictionary_rule(branch: list) -> tuple(dict, str):
         if node.is_leaf:
             prediction = node.prediction
         else:
-            if node.variable not in conditions_dict:
+            if node.variable not in conditions_dict.keys():
                 conditions_dict[node.variable] = dict()
 
-            if node.is_equal not in conditions_dict[node.variable]:
+            if node.is_equal not in conditions_dict[node.variable].keys():
                 conditions_dict[node.variable][node.is_equal] = [node.category]
             else:
                 conditions_dict[node.variable][node.is_equal].append(node.category)
